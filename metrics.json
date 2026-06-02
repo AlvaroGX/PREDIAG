@@ -1,0 +1,230 @@
+{
+  "accuracy": 0.8071,
+  "n_registros": 3500,
+  "n_features": 19,
+  "n_clases": 7,
+  "clases": [
+    "Falla de energía",
+    "Falla de hardware",
+    "Falla de impresión",
+    "Falla de pantalla",
+    "Falla de software",
+    "SO incompatible",
+    "Sobrecalentamiento"
+  ],
+  "classification_report": {
+    "Falla de energía": {
+      "precision": 0.717,
+      "recall": 0.76,
+      "f1-score": 0.7379,
+      "support": 100.0
+    },
+    "Falla de hardware": {
+      "precision": 0.8404,
+      "recall": 0.79,
+      "f1-score": 0.8144,
+      "support": 100.0
+    },
+    "Falla de impresión": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "Falla de pantalla": {
+      "precision": 0.8229,
+      "recall": 0.79,
+      "f1-score": 0.8061,
+      "support": 100.0
+    },
+    "Falla de software": {
+      "precision": 0.7283,
+      "recall": 0.67,
+      "f1-score": 0.6979,
+      "support": 100.0
+    },
+    "SO incompatible": {
+      "precision": 0.6814,
+      "recall": 0.77,
+      "f1-score": 0.723,
+      "support": 100.0
+    },
+    "Sobrecalentamiento": {
+      "precision": 0.8788,
+      "recall": 0.87,
+      "f1-score": 0.8744,
+      "support": 100.0
+    },
+    "accuracy": 0.8071428571428572,
+    "macro avg": {
+      "precision": 0.8098,
+      "recall": 0.8071,
+      "f1-score": 0.8077,
+      "support": 700.0
+    },
+    "weighted avg": {
+      "precision": 0.8098,
+      "recall": 0.8071,
+      "f1-score": 0.8077,
+      "support": 700.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      76,
+      5,
+      0,
+      6,
+      4,
+      7,
+      2
+    ],
+    [
+      10,
+      79,
+      0,
+      3,
+      2,
+      3,
+      3
+    ],
+    [
+      0,
+      0,
+      100,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      2,
+      7,
+      0,
+      79,
+      2,
+      9,
+      1
+    ],
+    [
+      10,
+      2,
+      0,
+      3,
+      67,
+      15,
+      3
+    ],
+    [
+      7,
+      1,
+      0,
+      2,
+      10,
+      77,
+      3
+    ],
+    [
+      1,
+      0,
+      0,
+      3,
+      7,
+      2,
+      87
+    ]
+  ],
+  "feature_importances": {
+    "tipo_equipo_cod": 0.1599,
+    "sobrecalienta": 0.1129,
+    "pantalla_negra": 0.1007,
+    "enciende": 0.0939,
+    "muy_lento_post_formato": 0.0844,
+    "pitidos_encendido": 0.0516,
+    "muy_lento": 0.0482,
+    "hace_ruido": 0.047,
+    "no_imprime": 0.0465,
+    "sufrio_golpe": 0.0421,
+    "reinicia_solo": 0.0371,
+    "no_enciende_del_todo": 0.0321,
+    "error_sistema": 0.0299,
+    "funciona_sin_bateria": 0.0266,
+    "funciona_tras_golpe": 0.0207,
+    "atasca_papel": 0.0191,
+    "pantalla_azul": 0.0184,
+    "imprime_lineas": 0.0157,
+    "succion_bomba": 0.0133
+  },
+  "distribucion_fallas": {
+    "Falla de impresión": 500,
+    "Falla de software": 500,
+    "Falla de hardware": 500,
+    "Sobrecalentamiento": 500,
+    "Falla de pantalla": 500,
+    "SO incompatible": 500,
+    "Falla de energía": 500
+  },
+  "distribucion_equipos": {
+    "PC de escritorio": 1507,
+    "Laptop": 1493,
+    "Impresora Epson": 500
+  },
+  "comparativa_algoritmos": {
+    "Random Forest": 0.8071,
+    "KNN": 0.7886,
+    "Arbol Decision ID3": 0.7757,
+    "MLP + Adam": 0.7857
+  },
+  "mse": 39630.4,
+  "rmse": 199.07,
+  "regresion_lineal": {
+    "intercepto": 141.01,
+    "coeficientes": [
+      8.1022,
+      -4.3253,
+      0.2505,
+      2.3661,
+      -7.5341,
+      3.0179,
+      -0.6876,
+      -0.358,
+      9.1972,
+      -5.1461,
+      -4.7097,
+      -0.0017,
+      0.7973,
+      1.0962,
+      -2.379,
+      -2.8209,
+      -1.406,
+      -0.0557,
+      5.6598
+    ]
+  },
+  "red_neuronal": {
+    "arquitectura": "19->64->32->7",
+    "activacion": "ReLU",
+    "optimizador": "Adam",
+    "pesos_capa1_shape": [
+      19,
+      64
+    ],
+    "sesgos_capa1_shape": [
+      64
+    ]
+  },
+  "numpy_stats": {
+    "matriz_shape": [
+      3500,
+      18
+    ],
+    "sintomas_totales": 12550,
+    "sintomas_promedio": 3.59,
+    "costo_promedio": 141.02,
+    "costo_std": 193.92
+  },
+  "apriori": {
+    "itemsets_encontrados": 131,
+    "reglas_generadas": 169
+  }
+}

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema ML Soporte Técnico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container mt-4 mb-4">
+
+    <div class="card shadow p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0">Prediagnóstico de Equipos</h2>
+            <div class="d-flex gap-2">
+                <a href="/dashboard" class="btn btn-outline-secondary btn-sm">Dashboard</a>
+                <a href="/historial" class="btn btn-outline-secondary btn-sm">Historial</a>
+                <a href="/modelos" class="btn btn-outline-secondary btn-sm">Modelos</a>
+            </div>
+        </div>
+
+        <form action="/predecir" method="POST" id="formPrediccion">
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">Tipo de equipo</label>
+                <select name="equipo" id="equipo" class="form-select" required onchange="toggleSections()">
+                    <option value="" disabled selected>Seleccione...</option>
+                    <option value="Laptop">Laptop</option>
+                    <option value="PC de escritorio">PC de escritorio</option>
+                    <option value="Impresora Epson">Impresora Epson</option>
+                </select>
+            </div>
+
+            <div id="seccion_laptop" class="seccion-sintomas" style="display:none">
+                <h5 class="border-bottom pb-2 mb-3">Laptop</h5>
+                <div class="row">
+                    {% for s in [
+                        ('enciende', 'Enciende'),
+                        ('sufrio_golpe', 'Golpe recibido'),
+                        ('hace_ruido', 'Ruido anormal'),
+                        ('sobrecalienta', 'Sobrecalentamiento'),
+                        ('no_enciende_del_todo', 'No enciende completo'),
+                        ('reinicia_solo', 'Se reinicia solo'),
+                        ('error_sistema', 'Errores frecuentes del sistema'),
+                        ('pitidos_encendido', 'Pitidos al inicio'),
+                        ('muy_lento', 'Lentitud'),
+                        ('pantalla_negra', 'Pantalla negra'),
+                        ('pantalla_azul', 'Pantalla azul'),
+                        ('funciona_sin_bateria', 'Solo enciende al conectar cargador'),
+                        ('funciona_tras_golpe', 'Funciona tras golpe'),
+                        ('muy_lento_post_formato', 'Lentitud post-formato'),
+                        ('teclado_falla', 'Teclado no funciona o se teclea solo')
+                    ] %}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">{{ s[1] }}</label>
+                        <select name="{{ s[0] }}" class="form-select">
+                            <option value="0" selected>No</option>
+                            <option value="1">Sí</option>
+                        </select>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div id="seccion_pc" class="seccion-sintomas" style="display:none">
+                <h5 class="border-bottom pb-2 mb-3">PC de escritorio</h5>
+                <div class="row">
+                    {% for s in [
+                        ('enciende', 'Enciende'),
+                        ('sufrio_golpe', 'Golpe recibido'),
+                        ('hace_ruido', 'Ruido anormal'),
+                        ('sobrecalienta', 'Sobrecalentamiento'),
+                        ('no_enciende_del_todo', 'No enciende completo'),
+                        ('reinicia_solo', 'Se reinicia solo'),
+                        ('error_sistema', 'Errores frecuentes del sistema'),
+                        ('pitidos_encendido', 'Pitidos al inicio'),
+                        ('muy_lento', 'Lentitud'),
+                        ('pantalla_negra', 'Pantalla negra'),
+                        ('pantalla_azul', 'Pantalla azul'),
+                        ('funciona_tras_golpe', 'Funciona tras golpe'),
+                        ('muy_lento_post_formato', 'Lentitud post-formato')
+                    ] %}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">{{ s[1] }}</label>
+                        <select name="{{ s[0] }}" class="form-select">
+                            <option value="0" selected>No</option>
+                            <option value="1">Sí</option>
+                        </select>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div id="seccion_impresora" class="seccion-sintomas" style="display:none">
+                <h5 class="border-bottom pb-2 mb-3">Impresora Epson</h5>
+                <div class="row">
+                    {% for s in [
+                        ('enciende', 'Enciende'),
+                        ('hace_ruido', 'Ruido anormal'),
+                        ('no_imprime', 'No imprime'),
+                        ('atasca_papel', 'Atasca papel'),
+                        ('imprime_lineas', 'Líneas en impresión'),
+                        ('succion_bomba', 'Falta algún color'),
+                    ] %}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">{{ s[1] }}</label>
+                        <select name="{{ s[0] }}" class="form-select">
+                            <option value="0" selected>No</option>
+                            <option value="1">Sí</option>
+                        </select>
+                    </div>
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="sufrio_golpe" value="0">
+                <input type="hidden" name="sobrecalienta" value="0">
+                <input type="hidden" name="muy_lento" value="0">
+                <input type="hidden" name="pantalla_negra" value="0">
+                <input type="hidden" name="pantalla_azul" value="0">
+                <input type="hidden" name="no_enciende_del_todo" value="0">
+                <input type="hidden" name="reinicia_solo" value="0">
+                <input type="hidden" name="error_sistema" value="0">
+                <input type="hidden" name="pitidos_encendido" value="0">
+                <input type="hidden" name="funciona_sin_bateria" value="0">
+                <input type="hidden" name="funciona_tras_golpe" value="0">
+                <input type="hidden" name="muy_lento_post_formato" value="0">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3" id="btnPredecir">
+                <span id="spinner" class="spinner-border spinner-border-sm me-2" role="status" style="display:none"></span>
+                Diagnosticar equipo
+            </button>
+
+        </form>
+
+        <div id="loading" class="text-center mt-4" style="display:none">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Analizando síntomas...</p>
+        </div>
+
+        {% if error %}
+
+        <div class="alert alert-danger mt-4 text-center">{{ error }}</div>
+
+        {% elif tipo_falla %}
+
+        <div class="alert alert-success mt-4" id="resultado">
+            <h4 class="text-center mb-3">Resultado del diagnóstico</h4>
+            <hr>
+
+            <div class="row text-center mb-3">
+                <div class="col-sm-4 mb-2 result-item">
+                    <span class="result-icon">🔍</span>
+                    <small class="text-muted d-block">Falla detectada</small>
+                    <strong class="fs-5">{{ tipo_falla }}</strong>
+                </div>
+                <div class="col-sm-4 mb-2 result-item">
+                    <span class="result-icon">🔧</span>
+                    <small class="text-muted d-block">Reparación sugerida</small>
+                    <strong class="fs-5">{{ reparacion }}</strong>
+                </div>
+                <div class="col-sm-4 mb-2 result-item">
+                    <span class="result-icon">💰</span>
+                    <small class="text-muted d-block">Costo estimado</small>
+                    <strong class="fs-5">{{ costo }}</strong>
+                </div>
+            </div>
+
+            {% if nota %}
+            <div class="mt-2 mb-3 p-3 bg-white rounded-3 border-start border-primary border-4">
+                <small class="text-muted d-block fw-bold mb-1">🧾 Nota de venta - Servicios incluidos:</small>
+                <p class="mb-1 fs-6">{{ nota }}</p>
+                <small class="text-muted">Costo total: <strong>{{ costo }}</strong></small>
+            </div>
+            {% endif %}
+
+            {% if confianza %}
+            <div class="text-center mb-3 confianza-section">
+                <small class="text-muted">Confianza del modelo:</small>
+                <div class="progress mx-auto" style="max-width:300px;height:22px">
+                    <div class="progress-bar"
+                         style="width:{{ confianza }}%">
+                        {{ confianza }}%
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if hallazgos_extra %}
+            <div class="mt-3">
+                <small class="text-muted d-block mb-1 fw-bold">Hallazgos adicionales:</small>
+                {% for h in hallazgos_extra %}
+                <div class="alert alert-warning p-2 mb-2 d-flex justify-content-between align-items-center" style="border-radius:10px">
+                    <div>
+                        <strong>{{ h.tipo_falla }}</strong><br>
+                        <small>{{ h.reparacion }}</small>
+                    </div>
+                    <span class="fw-bold text-danger">S/{{ "%.2f"|format(h.costo) }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if importancias %}
+            <div class="mt-3 importancias-section">
+                <small class="text-muted d-block mb-1">Síntomas más influyentes:</small>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for imp in importancias[:3] %}
+                    <span class="badge importancia-badge {% if imp.presente %}bg-danger{% else %}bg-secondary{% endif %} fs-6">
+                        {{ imp.sintoma.replace('_', ' ') }}
+                        {% if imp.presente %}(Sí){% else %}(No){% endif %}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <form action="/exportar" method="POST" class="mt-3 text-center exportar-section" target="_blank">
+                <input type="hidden" name="tipo_falla" value="{{ tipo_falla }}">
+                <input type="hidden" name="reparacion" value="{{ reparacion }}">
+                <input type="hidden" name="costo" value="{{ costo }}">
+                <input type="hidden" name="confianza" value="{{ confianza }}">
+                <input type="hidden" name="equipo" value="{{ request.form.get('equipo', '') }}">
+                <input type="hidden" name="nota" value="{{ nota }}">
+                {% if hallazgos_extra %}
+                <input type="hidden" name="hallazgos_extra" value="{{ hallazgos_extra|tojson }}">
+                {% endif %}
+                <button type="submit" class="btn btn-sm btn-outline-success">
+                    Descargar diagnóstico
+                </button>
+            </form>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<script>
+function toggleSections() {
+    var eq = document.getElementById('equipo').value;
+    document.getElementById('seccion_laptop').style.display = eq === 'Laptop' ? 'block' : 'none';
+    document.getElementById('seccion_pc').style.display = eq === 'PC de escritorio' ? 'block' : 'none';
+    document.getElementById('seccion_impresora').style.display = eq === 'Impresora Epson' ? 'block' : 'none';
+}
+
+document.getElementById('formPrediccion').addEventListener('submit', function() {
+    document.getElementById('btnPredecir').disabled = true;
+    document.getElementById('spinner').style.display = 'inline-block';
+    document.getElementById('loading').style.display = 'block';
+});
+</script>
+
+</body>
+</html>

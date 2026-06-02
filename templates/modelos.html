@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelos - Prediagnostico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container mt-4 mb-4">
+
+    <div class="card shadow p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0">Comparativa de Algoritmos</h2>
+            <a href="/" class="btn btn-outline-secondary btn-sm">Volver</a>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+
+        {% elif metrics %}
+
+        <div class="row mb-4">
+            <div class="col-md-3 mb-2">
+                <div class="p-3 bg-light rounded-3 text-center">
+                    <small class="text-muted d-block">Registros</small>
+                    <strong class="fs-4">{{ metrics.n_registros }}</strong>
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <div class="p-3 bg-light rounded-3 text-center">
+                    <small class="text-muted d-block">Features</small>
+                    <strong class="fs-4">{{ metrics.n_features }}</strong>
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <div class="p-3 bg-light rounded-3 text-center">
+                    <small class="text-muted d-block">Clases de falla</small>
+                    <strong class="fs-4">{{ metrics.n_clases }}</strong>
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <div class="p-3 bg-light rounded-3 text-center">
+                    <small class="text-muted d-block">Accuracy (RF)</small>
+                    <strong class="fs-4">{{ "%.1f"|format(metrics.accuracy * 100) }}%</strong>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="border-bottom pb-2 mb-3">Accuracy por Algoritmo</h5>
+        <table class="table table-bordered">
+            <thead class="table-primary">
+                <tr>
+                    <th>Algoritmo</th>
+                    <th>Accuracy</th>
+                    <th>Libreria</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set comparativa = metrics.comparativa_algoritmos %}
+                <tr>
+                    <td><strong>Random Forest</strong></td>
+                    <td>{{ "%.2f"|format(comparativa['Random Forest'] * 100) }}%</td>
+                    <td><code>sklearn.ensemble.RandomForestClassifier</code></td>
+                </tr>
+                <tr>
+                    <td><strong>KNN (k=5)</strong></td>
+                    <td>{{ "%.2f"|format(comparativa['KNN'] * 100) }}%</td>
+                    <td><code>sklearn.neighbors.KNeighborsClassifier</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Arbol Decision (ID3)</strong></td>
+                    <td>{{ "%.2f"|format(comparativa['Arbol Decision ID3'] * 100) }}%</td>
+                    <td><code>sklearn.tree.DecisionTreeClassifier</code></td>
+                </tr>
+                <tr>
+                    <td><strong>MLP + Adam</strong></td>
+                    <td>{{ "%.2f"|format(comparativa['MLP + Adam'] * 100) }}%</td>
+                    <td><code>sklearn.neural_network.MLPClassifier</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row mt-4">
+            <div class="col-md-6 mb-3">
+                <h5 class="border-bottom pb-2 mb-3">Red Neuronal (MLP + Adam)</h5>
+                <table class="table table-sm">
+                    <tr><td>Arquitectura</td><td>{{ metrics.red_neuronal.arquitectura }}</td></tr>
+                    <tr><td>Activacion</td><td>{{ metrics.red_neuronal.activacion }}</td></tr>
+                    <tr><td>Optimizador</td><td>{{ metrics.red_neuronal.optimizador }}</td></tr>
+                    <tr><td>Pesos capa 1</td><td>{{ metrics.red_neuronal.pesos_capa1_shape }}</td></tr>
+                    <tr><td>Sesgos capa 1</td><td>{{ metrics.red_neuronal.sesgos_capa1_shape }}</td></tr>
+                </table>
+            </div>
+            <div class="col-md-6 mb-3">
+                <h5 class="border-bottom pb-2 mb-3">Regresion Lineal + MSE</h5>
+                <table class="table table-sm">
+                    <tr><td>MSE</td><td>{{ metrics.mse }}</td></tr>
+                    <tr><td>RMSE</td><td>{{ metrics.rmse }}</td></tr>
+                    <tr><td>Intercepto</td><td>S/{{ metrics.regresion_lineal.intercepto }}</td></tr>
+                    <tr><td>Coeficientes</td><td>{{ metrics.regresion_lineal.coeficientes|length }} features</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-md-6 mb-3">
+                <h5 class="border-bottom pb-2 mb-3">NumPy - Estadisticas</h5>
+                <table class="table table-sm">
+                    <tr><td>Matriz sintomas</td><td>{{ metrics.numpy_stats.matriz_shape }}</td></tr>
+                    <tr><td>Total sintomas activos</td><td>{{ metrics.numpy_stats.sintomas_totales }}</td></tr>
+                    <tr><td>Promedio por caso</td><td>{{ metrics.numpy_stats.sintomas_promedio }}</td></tr>
+                    <tr><td>Costo promedio</td><td>S/{{ metrics.numpy_stats.costo_promedio }}</td></tr>
+                </table>
+            </div>
+            <div class="col-md-6 mb-3">
+                <h5 class="border-bottom pb-2 mb-3">Apriori - Asociacion</h5>
+                <table class="table table-sm">
+                    <tr><td>Itemsets frecuentes</td><td>{{ metrics.apriori.itemsets_encontrados }}</td></tr>
+                    <tr><td>Reglas generadas</td><td>{{ metrics.apriori.reglas_generadas }}</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <h5 class="border-bottom pb-2 mb-3">K-Means Clustering</h5>
+            <p class="text-muted">7 clusters formados sobre {{ metrics.n_registros }} registros. Datos disponibles en la consola de entrenamiento.</p>
+        </div>
+
+        <div class="mt-4">
+            <h5 class="border-bottom pb-2 mb-3">Feature Importances (Random Forest)</h5>
+            <div class="row">
+                {% for feat, imp in (metrics.feature_importances|dictsort(by='value', reverse=true))[:10] %}
+                <div class="col-md-6 mb-2">
+                    <div class="d-flex justify-content-between">
+                        <small>{{ feat.replace('_', ' ') }}</small>
+                        <small class="fw-bold">{{ "%.2f"|format(imp * 100) }}%</small>
+                    </div>
+                    <div class="progress" style="height:8px">
+                        <div class="progress-bar" style="width:{{ imp * 100 }}%"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mt-4 p-3 bg-light rounded-3">
+            <h5 class="border-bottom pb-2 mb-3">Origen de datos (SQL)</h5>
+            <p class="mb-1"><strong>Archivo:</strong> <code>dataset.sql</code> (3500 registros) — BD relacional SQLite</p>
+            <p class="mb-1"><strong>Consulta SQL ejecutada en train.py:</strong></p>
+            <pre class="bg-dark text-light p-3 rounded-3" style="font-size:0.85rem"><code>SELECT id, tipo_equipo, enciende, sufrio_golpe, hace_ruido,
+       sobrecalienta, muy_lento, pantalla_negra, pantalla_azul,
+       no_imprime, atasca_papel, imprime_lineas, succion_bomba,
+       no_enciende_del_todo, reinicia_solo, error_sistema,
+       pitidos_encendido, funciona_sin_bateria, funciona_tras_golpe,
+       muy_lento_post_formato, tipo_falla, reparacion, costo_aprox
+FROM dataset</code></pre>
+        </div>
+
+        <div class="mt-4 text-muted small">
+            <p><strong>Librerias utilizadas:</strong> numpy, pandas, scikit-learn (RandomForest, KNN, DecisionTree, MLP, LinearRegression, KMeans), mlxtend (Apriori), joblib, sqlite3</p>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
