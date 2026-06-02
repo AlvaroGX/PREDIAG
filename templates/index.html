@@ -33,9 +33,8 @@
         </div>
         <p class="preloader-sub">Inicializando módulos de diagnóstico...</p>
         <div class="preloader-steps">
-            <span class="step active" data-text="Conectando BD">Conectando BD</span>
-            <span class="step" data-text="Cargando modelo IA">Cargando modelo IA</span>
-            <span class="step" data-text="Listo">Listo</span>
+            <span class="step active">Cargando</span>
+            <span class="step">Listo</span>
         </div>
     </div>
 </div>
@@ -275,10 +274,9 @@ var preloader = document.getElementById('preloader');
 var steps = document.querySelectorAll('.preloader-steps .step');
 var sub = document.querySelector('.preloader-sub');
 var msgs = [
-    'Conectando a base de datos...',
-    'Cargando modelo de inteligencia artificial...',
-    'Optimizando algoritmos de prediccion...',
-    'Inicializando interfaz de diagnostico...',
+    'Cargando inteligencia artificial...',
+    'Optimizando algoritmos...',
+    'Preparando interfaz...',
     'Sistema listo'
 ];
 
@@ -301,16 +299,13 @@ var MIN_DISPLAY = 5000;
 
 updateStep(0);
 
-var stepTimings = [1000, 2200, 3500, 4500];
-stepTimings.forEach(function(t, i) {
-    setTimeout(function() { updateStep(i + 1); }, t);
-});
+setTimeout(function() { updateStep(1); }, 3000);
 
 setTimeout(function() {
     var elapsed = Date.now() - preloaderStart;
     var remaining = Math.max(0, MIN_DISPLAY - elapsed);
     setTimeout(hidePreloader, remaining);
-}, 4800);
+}, 4000);
 
 window.addEventListener('load', function() {
     var elapsed = Date.now() - preloaderStart;
