@@ -640,3 +640,141 @@ pre code {
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 212, 255, 0.5);
 }
+
+/* ─── PRELOADER ─── */
+
+#preloader {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.preloader-content {
+    text-align: center;
+    max-width: 360px;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.preloader-icon {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+}
+
+.preloader-ring {
+    animation: preloaderSpin 1.5s linear infinite;
+    transform-origin: center;
+}
+
+@keyframes preloaderSpin {
+    0% { transform: rotate(0deg); stroke-dashoffset: 0; }
+    50% { stroke-dashoffset: 110; }
+    100% { transform: rotate(360deg); stroke-dashoffset: 0; }
+}
+
+.preloader-dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 12px; height: 12px;
+    margin: -6px 0 0 -6px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: preloaderDot 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px var(--primary));
+}
+
+@keyframes preloaderDot {
+    0%, 100% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+.preloader-title {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.preloader-bar {
+    width: 280px;
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    margin: 0 auto 16px;
+    overflow: hidden;
+}
+
+.preloader-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 3px;
+    animation: preloaderBar 2.5s ease-in-out forwards;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+@keyframes preloaderBar {
+    0% { width: 0%; }
+    30% { width: 35%; }
+    60% { width: 65%; }
+    85% { width: 90%; }
+    100% { width: 100%; }
+}
+
+.preloader-sub {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.preloader-steps {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.preloader-steps .step {
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: var(--text-muted);
+    transition: all 0.5s ease;
+    position: relative;
+}
+
+.preloader-steps .step.active {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: rgba(0, 212, 255, 0.3);
+    color: var(--primary);
+}
+
+.preloader-steps .step.done {
+    background: rgba(0, 230, 118, 0.1);
+    border-color: rgba(0, 230, 118, 0.3);
+    color: var(--success);
+}
+
+.preloader-steps .step.done::before {
+    content: '✓ ';
+}

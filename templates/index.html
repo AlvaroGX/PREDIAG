@@ -9,6 +9,36 @@
 </head>
 <body>
 
+<div id="preloader">
+    <div class="preloader-content">
+        <div class="preloader-icon">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="40" r="35" stroke="rgba(0,212,255,0.2)" stroke-width="3"/>
+                <circle cx="40" cy="40" r="35" stroke="url(#preloaderGrad)" stroke-width="3"
+                    stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="0"
+                    class="preloader-ring"/>
+                <defs>
+                    <linearGradient id="preloaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#00d4ff"/>
+                        <stop offset="100%" stop-color="#7b2ff7"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <div class="preloader-dot"></div>
+        </div>
+        <h3 class="preloader-title">Cargando sistema</h3>
+        <div class="preloader-bar">
+            <div class="preloader-bar-fill"></div>
+        </div>
+        <p class="preloader-sub">Inicializando módulos de diagnóstico...</p>
+        <div class="preloader-steps">
+            <span class="step active" data-text="Conectando BD">Conectando BD</span>
+            <span class="step" data-text="Cargando modelo IA">Cargando modelo IA</span>
+            <span class="step" data-text="Listo">Listo</span>
+        </div>
+    </div>
+</div>
+
 <div class="container mt-4 mb-4">
 
     <div class="card shadow p-4">
@@ -240,6 +270,44 @@
 </div>
 
 <script>
+var preloader = document.getElementById('preloader');
+var steps = document.querySelectorAll('.preloader-steps .step');
+var sub = document.querySelector('.preloader-sub');
+var msgs = [
+    'Conectando a base de datos...',
+    'Cargando modelo de inteligencia artificial...',
+    'Optimizando algoritmos de prediccion...',
+    'Inicializando interfaz de diagnostico...',
+    'Sistema listo'
+];
+
+function updateStep(i) {
+    steps.forEach(function(s, idx) {
+        s.classList.remove('active', 'done');
+        if (idx < i) s.classList.add('done');
+        else if (idx === i) s.classList.add('active');
+    });
+    if (sub) sub.textContent = msgs[i] || 'Listo';
+}
+
+function hidePreloader() {
+    preloader.classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+updateStep(0);
+
+var stepTimings = [600, 1200, 1800, 2400];
+stepTimings.forEach(function(t, i) {
+    setTimeout(function() { updateStep(i + 1); }, t);
+});
+
+setTimeout(hidePreloader, 3200);
+
+window.addEventListener('load', function() {
+    setTimeout(hidePreloader, 500);
+});
+
 function toggleSections() {
     var eq = document.getElementById('equipo').value;
     document.getElementById('seccion_laptop').style.display = eq === 'Laptop' ? 'block' : 'none';
