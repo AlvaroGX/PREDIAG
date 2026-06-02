@@ -12,20 +12,10 @@
 
 <div id="preloader">
     <div class="preloader-content">
-        <div class="preloader-icon">
-            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="35" stroke="rgba(0,212,255,0.2)" stroke-width="3"/>
-                <circle cx="40" cy="40" r="35" stroke="url(#preloaderGrad)" stroke-width="3"
-                    stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="0"
-                    class="preloader-ring"/>
-                <defs>
-                    <linearGradient id="preloaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#00d4ff"/>
-                        <stop offset="100%" stop-color="#7b2ff7"/>
-                    </linearGradient>
-                </defs>
-            </svg>
-            <div class="preloader-dot"></div>
+        <div class="preloader-icon" style="width:auto;height:auto;animation:none">
+            <img src="{{ url_for('static', filename='anime-bocchi.gif') }}"
+                 alt="Cargando..."
+                 style="max-width:180px;border-radius:16px;box-shadow:0 0 30px rgba(0,212,255,0.15)">
         </div>
         <h3 class="preloader-title">Cargando sistema</h3>
         <div class="preloader-bar">
