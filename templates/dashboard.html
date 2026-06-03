@@ -114,6 +114,13 @@ async function cargar() {
         document.getElementById('avgConf').textContent = (data.confianza_promedio || 0) + '%';
         document.getElementById('nReg').textContent = m.n_registros;
 
+        const paletas = {
+            fallas: ['#00d4ff','#7c3aed','#ff6b6b','#00e676','#ffd740','#ff9100','#e040fb'],
+            fallasSoft: ['rgba(0,212,255,0.7)','rgba(124,58,237,0.7)','rgba(255,107,107,0.7)','rgba(0,230,118,0.7)','rgba(255,215,64,0.7)','rgba(255,145,0,0.7)','rgba(224,64,251,0.7)'],
+            equipos: ['#00d4ff','#7c3aed','#ff6b6b'],
+            importancia: ['#00e676','#00d4ff','#7c3aed','#ffd740','#ff9100','#ff6b6b','#e040fb','#00bcd4','#8bc34a','#ff5722']
+        };
+
         new Chart(document.getElementById('chartPrecision'), {
             type: 'bar',
             data: {
@@ -121,7 +128,9 @@ async function cargar() {
                 datasets: [{
                     label: 'Precisión',
                     data: m.clases.map(c => ((m.classification_report[c] || {}).precision || 0) * 100),
-                    backgroundColor: '#4fc3f7',
+                    backgroundColor: paletas.fallasSoft,
+                    borderColor: paletas.fallas,
+                    borderWidth: 1,
                     borderRadius: 6
                 }]
             },
@@ -132,19 +141,20 @@ async function cargar() {
             }
         });
 
-        const colores = ['#0a3d7c','#4fc3f7','#1565c0','#90caf9','#1e88e5','#64b5f6','#0d47a1'];
         new Chart(document.getElementById('chartDistFallas'), {
             type: 'doughnut',
             data: {
                 labels: Object.keys(m.distribucion_fallas),
                 datasets: [{
                     data: Object.values(m.distribucion_fallas),
-                    backgroundColor: colores
+                    backgroundColor: paletas.fallas,
+                    borderColor: '#1a1a2e',
+                    borderWidth: 2
                 }]
             },
             options: {
                 responsive: true,
-                plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }
+                plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } } }
             }
         });
 
@@ -158,7 +168,7 @@ async function cargar() {
                 datasets: [{
                     label: 'Importancia (%)',
                     data: fiData,
-                    backgroundColor: '#1565c0',
+                    backgroundColor: fiData.map((v, i) => paletas.importancia[i % paletas.importancia.length]),
                     borderRadius: 4
                 }]
             },
@@ -177,7 +187,9 @@ async function cargar() {
                 datasets: [{
                     label: 'Predicciones',
                     data: data.equipos_historial.map(e => e.c),
-                    backgroundColor: ['#0a3d7c','#4fc3f7','#1565c0'],
+                    backgroundColor: paletas.equipos,
+                    borderColor: paletas.equipos.map(c => c),
+                    borderWidth: 1,
                     borderRadius: 6
                 }]
             },
